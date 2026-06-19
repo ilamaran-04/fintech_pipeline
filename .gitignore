@@ -1,0 +1,6 @@
+config/config.py 
+*.env 
+__pycache__/ 
+*.pyc 
+data/raw/ 
+data/staging/
