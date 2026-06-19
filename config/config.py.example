@@ -1,0 +1,33 @@
+import os
+
+print("Initializing FinFlow ETL Pipeline Configuration...")
+
+# 1. BASE DIRECTORY SETTINGS (Saves paths dynamically relative to project root)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# 2. DATA DIRECTORY MATRIX
+RAW_DATA_DIR = os.path.join(BASE_DIR, "data", "raw")
+STAGING_DATA_DIR = os.path.join(BASE_DIR, "data", "staging")
+
+# Ensure directories exist locally
+os.makedirs(RAW_DATA_DIR, exist_ok=True)
+os.makedirs(STAGING_DATA_DIR, exist_ok=True)
+
+# 3. ALPHA VANTAGE API CONFIGURATIONS
+API_KEY = "YOUR_FREE_API_KEY"  # Replace with your actual key from alphavantage.co
+BASE_URL = "https://www.alphavantage.co/query"
+TICKERS = ["AAPL", "MSFT", "GOOGL", "TSLA"]
+
+# 4. POSTGRESQL OLTP DATABASE CONFIGURATIONS
+DB_CONFIG = {
+    "host": "localhost",       # Changes to your AWS RDS endpoint during Step 6
+    "database": "finflow_db",  # Your local PostgreSQL database name
+    "user": "postgres",        # Default PostgreSQL username
+    "password": "your_password", # Replace with your actual PostgreSQL password
+    "port": 5432
+}
+
+# 5. AWS S3 BUCKET CONFIGURATIONS
+AWS_S3_BUCKET = "finflow-staging-bucket"
+
+print(f"Configuration matrix initialized for root: {BASE_DIR}")
