@@ -44,7 +44,7 @@ def fetch_daily_stock(ticker: str) -> dict:
         print(f" [ERROR] Unexpected exception occurred: {e}")
         raise
     else:
-        print(f" ✔ [SUCCESS] API payload downloaded perfectly for ticker: {ticker}")
+        print(f"[SUCCESS] API payload downloaded perfectly for ticker: {ticker}")
         return data
     finally:
         print(f" [INFO] Network thread call completed for {ticker} at {datetime.now()}")
