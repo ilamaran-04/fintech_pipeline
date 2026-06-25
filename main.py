@@ -1,4 +1,5 @@
 import sys
+import time
 from config.config import TICKERS
 
 # Explicitly importing your verified pipeline modules
@@ -19,13 +20,15 @@ def run_pipeline():
         print("-" * 40)
         
         try:
-            # Phase 1: Extraction & Saving Raw JSON
+            # Phase 1: Extraction
             print(f" [1/3] Extracting raw data from cloud API...")
             raw_payload = fetch_daily_stock(ticker)
             
-            if raw_payload and "Time Series (Daily)" in raw_payload:
-                save_raw_json(ticker, raw_payload)
-            else:
+            # Save whatever the API returned immediately so we can inspect it!
+            save_raw_json(ticker, raw_payload)
+            
+            # Now validate if it has the data we want
+            if not raw_payload or "Time Series (Daily)" not in raw_payload:
                 raise ValueError(f"API payload missing expected time-series keys for {ticker}.")
             
             # Phase 2: Transformation & Staging
@@ -42,8 +45,15 @@ def run_pipeline():
             print(f"[COMPLETED] Full ETL cycle successful for {ticker}!")
             success_count += 1
             
+            # Enforce breathing room after a successful run
+            print(f" [INFO] Pausing for 15 seconds to respect API limits...")
+            time.sleep(15)
+            
         except Exception as e:
             print(f"[CRITICAL FAILURE] Pipeline broke for asset {ticker}: {e}")
+            # Enforce breathing room even if it fails!
+            print(f" [INFO] Pausing for 15 seconds before moving to next asset...")
+            time.sleep(15)
             continue
             
     print("\n" + "=" * 60)
